@@ -1,0 +1,537 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ประวัติการเปิด-ปิดถัง | CHEMsafety+</title>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Tahoma, "Noto Sans Thai", Arial, sans-serif;
+      background: #E9F4F0;
+      color: #17483B;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    .topbar {
+      background: linear-gradient(135deg, #00644B, #004B3B);
+      padding: 25px 20px;
+      text-align: center;
+      color: #FFFFFF;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .topbar p {
+      margin: 8px 0 0;
+      font-size: 13px;
+    }
+
+    .content {
+      max-width: 700px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 22px 18px;
+      background: #FFFFFF;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .back-button {
+      border: none;
+      background: #E2F7EE;
+      color: #00513E;
+      border-radius: 9px;
+      padding: 10px 15px;
+      font-size: 14px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    h2 {
+      margin: 24px 0 8px;
+      color: #103E35;
+      font-size: 23px;
+    }
+
+    .description {
+      color: #456B5F;
+      font-size: 14px;
+      line-height: 1.7;
+      margin: 0 0 20px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .summary-card {
+      padding: 15px 8px;
+      text-align: center;
+      background: #F5FAF7;
+      border: 1px solid #D8E9E2;
+      border-radius: 13px;
+    }
+
+    .summary-number {
+      font-size: 25px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .summary-label {
+      font-size: 12px;
+      color: #456B5F;
+      line-height: 1.5;
+    }
+
+    .total {
+      color: #17483B;
+    }
+
+    .open-number {
+      color: #B42318;
+    }
+
+    .close-number {
+      color: #00804F;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .filters {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .filters input,
+    .filters select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #C9DED5;
+      border-radius: 9px;
+      background: #FFFFFF;
+      color: #17483B;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .filters input:focus,
+    .filters select:focus {
+      outline: none;
+      border-color: #00804F;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .history-card {
+      padding: 16px;
+      border: 1px solid #D8E9E2;
+      border-radius: 13px;
+      background: #FFFFFF;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .tank-id {
+      color: #103E35;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .chemical-name {
+      margin-top: 5px;
+      color: #628075;
+      font-size: 13px;
+    }
+
+    .action-badge {
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .badge-open {
+      color: #B42318;
+      background: #FCE8E6;
+    }
+
+    .badge-close {
+      color: #00644B;
+      background: #DDF5E8;
+    }
+
+    .history-details {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 11px;
+      border-top: 1px solid #E7F0EB;
+    }
+
+    .detail-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      color: #456B5F;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .detail-row i {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 28px 15px;
+      color: #628075;
+      background: #F5FAF7;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+
+    .note {
+      margin-top: 18px;
+      color: #628075;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 480px) {
+      .topbar {
+        padding: 22px 16px;
+      }
+
+      .topbar h1 {
+        font-size: 22px;
+      }
+
+      .content {
+        padding: 20px 14px;
+      }
+
+      .summary-grid {
+        gap: 7px;
+      }
+
+      .summary-card {
+        padding: 12px 4px;
+      }
+
+      .summary-number {
+        font-size: 22px;
+      }
+
+      .summary-label {
+        font-size: 11px;
+      }
+
+      .history-header {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <h1>CHEMsafety+</h1>
+    <p>ระบบประวัติการเปิด-ปิดถังสารเคมี</p>
+  </header>
+
+  <main class="content">
+
+    <button
+      type="button"
+      class="back-button"
+      onclick="window.location.href='home.html'">
+      <i data-lucide="arrow-left"
+         width="16" height="16"
+         style="vertical-align: middle;"></i>
+      กลับหน้าหลัก
+    </button>
+
+    <h2>ประวัติการเปิด–ปิดถัง</h2>
+
+    <p class="description">
+      ตรวจสอบรายการรายงานการเปิดและปิดถังสารเคมีย้อนหลัง
+      พร้อมวันที่ เวลา และพื้นที่ปฏิบัติงาน
+    </p>
+
+    <!-- สรุปจำนวนประวัติ -->
+    <div class="summary-grid">
+
+      <div class="summary-card">
+        <div class="summary-number total" id="totalCount">0</div>
+        <div class="summary-label">รายการทั้งหมด</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-number open-number" id="openCount">0</div>
+        <div class="summary-label">รายการเปิดถัง</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-number close-number" id="closeCount">0</div>
+        <div class="summary-label">รายการปิดถัง</div>
+      </div>
+
+    </div>
+
+    <div class="section-title">ค้นหาประวัติ</div>
+
+    <div class="filters">
+
+      <input
+        type="search"
+        id="searchInput"
+        placeholder="ค้นหารหัสถัง ชื่อสารเคมี หรือพื้นที่..."
+        aria-label="ค้นหาประวัติ">
+
+      <select id="actionFilter" aria-label="กรองประเภทรายการ">
+        <option value="all">รายการทั้งหมด</option>
+        <option value="OPEN">เฉพาะเปิดถัง</option>
+        <option value="CLOSE">เฉพาะปิดถัง</option>
+      </select>
+
+    </div>
+
+    <div class="history-list" id="historyList"></div>
+
+    <p class="note">
+      หมายเหตุ: รายการที่แสดงเป็นข้อมูลตัวอย่างสำหรับทดสอบหน้าเว็บ
+      ยังไม่ได้เชื่อมต่อกับฐานข้อมูลจริง
+    </p>
+
+  </main>
+
+  <script>
+    // ข้อมูลตัวอย่างสำหรับทดสอบหน้าเว็บ
+    // เปลี่ยนข้อมูลส่วนนี้เป็นข้อมูลจริงเมื่อเชื่อมต่อฐานข้อมูล
+    const historyData = [
+      {
+        tankId: "TANK-01",
+        chemical: "สารเคมีตัวอย่าง A",
+        action: "OPEN",
+        area: "พื้นที่สารเคมี",
+        dateTime: "2026-10-17T08:30:00",
+        note: "รายงานเปิดถัง"
+      },
+      {
+        tankId: "TANK-01",
+        chemical: "สารเคมีตัวอย่าง A",
+        action: "CLOSE",
+        area: "พื้นที่สารเคมี",
+        dateTime: "2026-10-17T09:15:00",
+        note: "รายงานปิดถัง"
+      },
+      {
+        tankId: "TANK-02",
+        chemical: "สารเคมีตัวอย่าง B",
+        action: "OPEN",
+        area: "พื้นที่การผลิต",
+        dateTime: "2026-10-17T10:00:00",
+        note: "รายงานเปิดถัง"
+      },
+      {
+        tankId: "TANK-03",
+        chemical: "สารเคมีตัวอย่าง C",
+        action: "CLOSE",
+        area: "พื้นที่สารเคมี",
+        dateTime: "2026-10-16T16:30:00",
+        note: "รายงานปิดถัง"
+      },
+      {
+        tankId: "TANK-02",
+        chemical: "สารเคมีตัวอย่าง B",
+        action: "CLOSE",
+        area: "พื้นที่การผลิต",
+        dateTime: "2026-10-16T15:45:00",
+        note: "รายงานปิดถัง"
+      }
+    ];
+
+    const historyList = document.getElementById("historyList");
+    const searchInput = document.getElementById("searchInput");
+    const actionFilter = document.getElementById("actionFilter");
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function formatDateTime(value) {
+      const date = new Date(value);
+
+      if (Number.isNaN(date.getTime())) {
+        return "ไม่ระบุวันเวลา";
+      }
+
+      return date.toLocaleString("th-TH", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }) + " น.";
+    }
+
+    function renderHistory() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      const selectedAction = actionFilter.value;
+
+      const filteredData = historyData
+        .filter(item => {
+          const searchableText = [
+            item.tankId,
+            item.chemical,
+            item.area,
+            item.note
+          ].join(" ").toLowerCase();
+
+          const matchesSearch = searchableText.includes(keyword);
+
+          const matchesAction =
+            selectedAction === "all" ||
+            item.action === selectedAction;
+
+          return matchesSearch && matchesAction;
+        })
+        .sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
+
+      document.getElementById("totalCount").textContent =
+        historyData.length;
+
+      document.getElementById("openCount").textContent =
+        historyData.filter(item => item.action === "OPEN").length;
+
+      document.getElementById("closeCount").textContent =
+        historyData.filter(item => item.action === "CLOSE").length;
+
+      if (filteredData.length === 0) {
+        historyList.innerHTML = `
+          <div class="empty-state">
+            ไม่พบประวัติที่ตรงกับการค้นหา
+          </div>
+        `;
+        return;
+      }
+
+      historyList.innerHTML = filteredData.map(item => {
+        const isOpen = item.action === "OPEN";
+
+        const actionText = isOpen ? "เปิดถัง" : "ปิดถัง";
+        const badgeClass = isOpen ? "badge-open" : "badge-close";
+        const actionIcon = isOpen ? "unlock" : "lock";
+
+        return `
+          <article class="history-card">
+
+            <div class="history-header">
+              <div>
+                <div class="tank-id">
+                  ${escapeHTML(item.tankId)}
+                </div>
+                <div class="chemical-name">
+                  ${escapeHTML(item.chemical)}
+                </div>
+              </div>
+
+              <span class="action-badge ${badgeClass}">
+                <i data-lucide="${actionIcon}"
+                   width="14" height="14"
+                   style="vertical-align: middle;"></i>
+                ${actionText}
+              </span>
+            </div>
+
+            <div class="history-details">
+
+              <div class="detail-row">
+                <i data-lucide="calendar-clock"
+                   width="16" height="16"></i>
+                <span>
+                  วันที่และเวลา: ${escapeHTML(formatDateTime(item.dateTime))}
+                </span>
+              </div>
+
+              <div class="detail-row">
+                <i data-lucide="map-pin"
+                   width="16" height="16"></i>
+                <span>
+                  พื้นที่: ${escapeHTML(item.area)}
+                </span>
+              </div>
+
+              <div class="detail-row">
+                <i data-lucide="clipboard-list"
+                   width="16" height="16"></i>
+                <span>
+                  รายละเอียด: ${escapeHTML(item.note)}
+                </span>
+              </div>
+
+            </div>
+
+          </article>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    searchInput.addEventListener("input", renderHistory);
+    actionFilter.addEventListener("change", renderHistory);
+
+    renderHistory();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,452 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตรวจสอบความปลอดภัย | CHEMsafety+</title>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Tahoma, "Noto Sans Thai", Arial, sans-serif;
+      background: #E9F4F0;
+      color: #17483B;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    .topbar {
+      background: linear-gradient(135deg, #00644B, #004B3B);
+      padding: 25px 20px;
+      text-align: center;
+      color: #FFFFFF;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .topbar p {
+      margin: 8px 0 0;
+      font-size: 13px;
+    }
+
+    .content {
+      max-width: 600px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 22px 18px;
+      background: #FFFFFF;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .back-button {
+      border: none;
+      background: #E2F7EE;
+      color: #00513E;
+      border-radius: 9px;
+      padding: 10px 15px;
+      font-size: 14px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .back-button:hover {
+      background: #D0EFE2;
+    }
+
+    h2 {
+      margin: 24px 0 8px;
+      color: #103E35;
+      font-size: 23px;
+    }
+
+    .description {
+      color: #456B5F;
+      font-size: 14px;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .check-card {
+      margin-top: 20px;
+      padding: 20px;
+      background: #F5FAF7;
+      border: 1px solid #D8E9E2;
+      border-radius: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .required-mark {
+      color: #E53935;
+      margin-left: 4px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="datetime-local"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #C9DED5;
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: 15px;
+      background: #FFFFFF;
+      color: #17483B;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #00804F;
+      box-shadow: 0 0 0 2px rgba(0, 128, 79, 0.10);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .required-note {
+      color: #628075;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .check-section {
+      margin-bottom: 20px;
+    }
+
+    .check-section-title {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .check-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid #D8E9E2;
+      border-radius: 10px;
+      background: #FFFFFF;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: normal;
+      line-height: 1.6;
+    }
+
+    .check-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 2px 0 0;
+      flex-shrink: 0;
+      accent-color: #00644B;
+      cursor: pointer;
+    }
+
+    .check-item span {
+      flex: 1;
+    }
+
+    .submit-button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #00644B;
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .submit-button:hover {
+      background: #00513E;
+    }
+
+    .submit-button:active {
+      opacity: 0.85;
+    }
+
+    .note {
+      margin-top: 15px;
+      color: #628075;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 480px) {
+      .topbar {
+        padding: 22px 16px;
+      }
+
+      .topbar h1 {
+        font-size: 22px;
+      }
+
+      .content {
+        padding: 20px 14px;
+      }
+
+      .check-card {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <h1>CHEMsafety+</h1>
+    <p>ระบบตรวจสอบความปลอดภัยในการทำงาน</p>
+  </header>
+
+  <main class="content">
+
+    <button
+      type="button"
+      class="back-button"
+      onclick="window.location.href='home.html'">
+      <i data-lucide="arrow-left" width="16" height="16"
+         style="vertical-align: middle;"></i>
+      กลับหน้าหลัก
+    </button>
+
+    <h2>ตรวจสอบความปลอดภัย</h2>
+
+    <p class="description">
+      กรุณาตรวจสอบความพร้อมก่อนเริ่มงานหรือหลังเลิกงาน
+      เพื่อให้มั่นใจว่าพื้นที่และอุปกรณ์มีความปลอดภัย
+    </p>
+
+    <form id="inspectForm" class="check-card">
+
+      <div class="form-group">
+        <label for="employeeName">
+          ชื่อผู้ตรวจสอบ
+          <span class="required-mark">*</span>
+        </label>
+
+        <input
+          type="text"
+          id="employeeName"
+          name="employeeName"
+          placeholder="กรอกชื่อผู้ตรวจสอบ"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="checkType">
+          ช่วงเวลาการตรวจสอบ
+          <span class="required-mark">*</span>
+        </label>
+
+        <select id="checkType" name="checkType" required>
+          <option value="">-- เลือกช่วงเวลาการตรวจสอบ --</option>
+          <option value="before">ก่อนเริ่มงาน</option>
+          <option value="after">หลังเลิกงาน</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="workDateTime">
+          วันที่และเวลาตรวจสอบ
+          <span class="required-mark">*</span>
+        </label>
+
+        <input
+          type="datetime-local"
+          id="workDateTime"
+          name="workDateTime"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="area">
+          พื้นที่ปฏิบัติงาน
+          <span class="required-mark">*</span>
+        </label>
+
+        <select id="area" name="area" required>
+          <option value="">-- เลือกพื้นที่ปฏิบัติงาน --</option>
+          <option value="chemical">พื้นที่สารเคมี</option>
+          <option value="production">พื้นที่การผลิต</option>
+          <option value="warehouse">พื้นที่คลังสินค้า</option>
+          <option value="other">พื้นที่อื่น ๆ</option>
+        </select>
+      </div>
+
+      <div class="check-section">
+        <div class="check-section-title">
+          รายการตรวจสอบความปลอดภัย
+          <span class="required-mark">*</span>
+        </div>
+
+        <p class="description" style="margin-bottom: 12px;">
+          กรุณาตรวจสอบรายการให้ครบทุกข้อก่อนส่งข้อมูล
+        </p>
+
+        <div class="check-list">
+
+          <label class="check-item">
+            <input type="checkbox" name="checks" value="PPE">
+            <span>สวมใส่อุปกรณ์ป้องกันส่วนบุคคล (PPE) อย่างเหมาะสม</span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox" name="checks" value="workplace">
+            <span>พื้นที่ปฏิบัติงานสะอาด เป็นระเบียบ และไม่มีสิ่งกีดขวาง</span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox" name="checks" value="equipment">
+            <span>เครื่องมือและอุปกรณ์อยู่ในสภาพพร้อมใช้งาน</span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox" name="checks" value="chemical">
+            <span>ภาชนะและถังสารเคมีอยู่ในสภาพเหมาะสมและปลอดภัย</span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox" name="checks" value="leak">
+            <span>ตรวจสอบการรั่วไหลหรือความผิดปกติของสารเคมีแล้ว</span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox" name="checks" value="tidy">
+            <span>จัดเก็บวัสดุและอุปกรณ์หลังปฏิบัติงานอย่างเรียบร้อย</span>
+          </label>
+
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="result">
+          ผลการตรวจสอบ
+          <span class="required-mark">*</span>
+        </label>
+
+        <select id="result" name="result" required>
+          <option value="">-- เลือกผลการตรวจสอบ --</option>
+          <option value="normal">ปกติ พร้อมปฏิบัติงาน</option>
+          <option value="abnormal">พบความผิดปกติ ต้องแก้ไข</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="details">รายละเอียดเพิ่มเติม / สิ่งผิดปกติที่พบ</label>
+
+        <textarea
+          id="details"
+          name="details"
+          placeholder="ระบุรายละเอียดเพิ่มเติม (ถ้ามี)"></textarea>
+      </div>
+
+      <button type="submit" class="submit-button">
+        <i data-lucide="clipboard-check" width="18" height="18"
+           style="vertical-align: middle; margin-right: 5px;"></i>
+        ส่งผลการตรวจสอบ
+      </button>
+
+      <p class="note">
+        * กรุณาตรวจสอบข้อมูลให้ถูกต้องก่อนส่ง
+        หากพบความผิดปกติ ควรแจ้งผู้รับผิดชอบและดำเนินการตามขั้นตอนความปลอดภัยของสถานประกอบการ
+      </p>
+
+    </form>
+
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // ตั้งค่าวันและเวลาปัจจุบันเป็นค่าเริ่มต้น
+    const dateTimeInput = document.getElementById("workDateTime");
+
+    function setCurrentDateTime() {
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+      dateTimeInput.value = now.toISOString().slice(0, 16);
+    }
+
+    setCurrentDateTime();
+
+    // ตรวจสอบข้อมูลก่อนส่งแบบฟอร์ม
+    document.getElementById("inspectForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const checkedItems = document.querySelectorAll(
+        'input[name="checks"]:checked'
+      );
+
+      const allItems = document.querySelectorAll(
+        'input[name="checks"]'
+      );
+
+      if (checkedItems.length !== allItems.length) {
+        alert("กรุณาตรวจสอบและทำเครื่องหมายให้ครบทุกข้อก่อนส่งข้อมูล");
+        return;
+      }
+
+      const result = document.getElementById("result").value;
+
+      if (result === "abnormal") {
+        const details = document.getElementById("details").value.trim();
+
+        if (details === "") {
+          alert("กรุณาระบุรายละเอียดความผิดปกติที่พบ");
+          document.getElementById("details").focus();
+          return;
+        }
+      }
+
+      alert(
+        "ตรวจสอบข้อมูลเรียบร้อยแล้ว\n\n" +
+        "หมายเหตุ: ข้อมูลยังไม่ได้บันทึกลงฐานข้อมูล"
+      );
+    });
+  </script>
+
+</body>
+</html>

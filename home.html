@@ -1,0 +1,836 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHEMsafety+</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --deep: #E9F4F0;
+      --deep2: #103E35;
+      --green: #00644B;
+      --white: #FFFFFF;
+      --mint: #B9E7D8;
+      --text: #17483B;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Tahoma, "Noto Sans Thai", Arial, sans-serif;
+      background: var(--deep);
+      color: var(--text);
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 746px;
+      min-height: 100vh;
+      min-height: 100dvh;
+      margin: 0 auto;
+      padding-bottom: calc(85px + env(safe-area-inset-bottom));
+      background: white;
+      overflow: hidden;
+    }
+
+    /* ===== ส่วนหัวแบบเดิม ===== */
+    .topbar {
+      position: relative;
+      min-height: 150px;
+      padding: 20px 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      background: linear-gradient(135deg, #00644B, #004B3B);
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 38px;
+      font-weight: bold;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-subtitle {
+      margin-top: 7px;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      line-height: 1.6;
+    }
+
+    .header-menu,
+    .header-more {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: white;
+    }
+
+    .header-menu {
+      left: 25px;
+    }
+
+    .header-more {
+      right: 22px;
+    }
+
+    .header-menu svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .header-more svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    /* ===== เนื้อหาหลัก ===== */
+    .content {
+      padding: 28px 35px 25px;
+      background: white;
+      border-radius: 22px 22px 0 0;
+      min-height: calc(100vh - 149px);
+      position: relative;
+      margin-top: -1px;
+    }
+
+    .page-heading {
+      margin: 0 0 20px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #103E35;
+    }
+
+    /* ===== การ์ดโปรไฟล์ ===== */
+    .profile-card {
+      min-height: 176px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 22px 25px;
+      border: 1px solid #004B3B;
+      border-radius: 22px;
+      color: white;
+      background: linear-gradient(120deg, #087B5C, #00644B);
+      box-shadow: 0 5px 14px rgba(0, 70, 50, 0.12);
+    }
+
+    .profile-avatar {
+      width: 116px;
+      height: 116px;
+      flex: 0 0 116px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #D8F4E8, #8DD0B8);
+      border: 3px solid white;
+      font-size: 42px;
+      overflow: hidden;
+    }
+
+    .profile-avatar svg {
+      width: 52px;
+      height: 52px;
+      color: #17483B;
+    }
+
+    .profile-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .employee-name {
+      margin: 0 0 10px;
+      font-size: 25px;
+      font-weight: bold;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .employee-id {
+      font-size: 17px;
+      line-height: 1.6;
+      color: white;
+    }
+
+    .logout-button {
+      align-self: flex-end;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 11px 13px;
+      border: 1px solid rgba(255,255,255,0.45);
+      border-radius: 12px;
+      color: white;
+      background: rgba(0,50,40,0.2);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .logout-button svg {
+      width: 19px;
+      height: 19px;
+      flex-shrink: 0;
+    }
+
+    /* ===== การ์ดเมนู ===== */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .menu-card {
+      width: 100%;
+      min-height: 106px;
+      display: grid;
+      grid-template-columns: 64px 2px minmax(0, 1fr) 22px;
+      align-items: center;
+      gap: 13px;
+      padding: 15px 13px;
+      border: 1px solid transparent;
+      border-radius: 17px;
+      color: white;
+      text-align: left;
+      transition: transform 0.15s, filter 0.15s;
+    }
+
+    .menu-card:active {
+      transform: scale(0.98);
+      filter: brightness(0.95);
+    }
+
+    .menu-card.report {
+      background: linear-gradient(110deg, #087B5C, #15966E);
+      border-color: #39B58C;
+    }
+
+    .menu-card.inspect {
+      background: linear-gradient(110deg, #1768A5, #328BD0);
+      border-color: #65B4E8;
+    }
+
+    .menu-card.tank-status {
+      background: linear-gradient(110deg, #087F8C, #16A6A1);
+      border-color: #4CC9BE;
+    }
+
+    .menu-card.history {
+      background: linear-gradient(110deg, #C86B20, #E9953D);
+      border-color: #F3B56D;
+    }
+
+    .menu-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-icon svg {
+      width: 38px;
+      height: 38px;
+      stroke-width: 1.8;
+    }
+
+    .menu-divider {
+      width: 2px;
+      height: 65px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.55);
+    }
+
+    .menu-copy {
+      min-width: 0;
+    }
+
+    .menu-copy strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 17px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    .menu-copy small {
+      display: block;
+      font-size: 12px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .menu-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-arrow svg {
+      width: 25px;
+      height: 25px;
+    }
+
+    /* ===== หน้าย่อย ===== */
+    .subpage {
+      display: none;
+      margin-top: 18px;
+      padding: 22px 18px;
+      border: 1px solid #D8E9E2;
+      border-radius: 16px;
+      background: #F5FAF7;
+    }
+
+    .subpage.active {
+      display: block;
+    }
+
+    .subpage h2 {
+      margin: 0 0 10px;
+      color: #103E35;
+      font-size: 20px;
+    }
+
+    .subpage p {
+      margin: 0;
+      color: #456B5F;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 18px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 9px;
+      background: #E2F7EE;
+      color: #00513E;
+      font-size: 14px;
+    }
+
+    .back-button svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ===== แถบเมนูด้านล่าง ===== */
+    .bottom-nav {
+      position: fixed;
+      z-index: 100;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 746px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      padding: 10px 6px calc(7px + env(safe-area-inset-bottom));
+      background: rgba(0, 75, 59, 0.98);
+      border-radius: 15px 15px 0 0;
+      box-shadow: 0 -3px 15px rgba(0,0,0,0.08);
+    }
+
+    .nav-item {
+      min-width: 0;
+      min-height: 52px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border: none;
+      border-radius: 9px;
+      color: #D5EAE2;
+      background: transparent;
+      font-size: 11px;
+    }
+
+    .nav-item.active {
+      color: white;
+      background: rgba(255,255,255,0.13);
+    }
+
+    .nav-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* ===== มือถือ ===== */
+    @media (max-width: 600px) {
+      .topbar {
+        min-height: 149px;
+        padding: 20px 45px;
+      }
+
+      .brand-title {
+        font-size: clamp(27px, 5.5vw, 38px);
+      }
+
+      .brand-subtitle {
+        font-size: clamp(9px, 2.2vw, 14px);
+        letter-spacing: 1px;
+      }
+
+      .header-menu {
+        left: 20px;
+      }
+
+      .header-more {
+        right: 18px;
+      }
+
+      .content {
+        padding: 25px 20px 24px;
+      }
+
+      .profile-card {
+        gap: 14px;
+        padding: 18px 15px;
+        min-height: 145px;
+        border-radius: 20px;
+      }
+
+      .profile-avatar {
+        width: 82px;
+        height: 82px;
+        flex-basis: 82px;
+        font-size: 32px;
+      }
+
+      .profile-avatar svg {
+        width: 40px;
+        height: 40px;
+      }
+
+      .employee-name {
+        font-size: clamp(15px, 3.5vw, 22px);
+      }
+
+      .employee-id {
+        font-size: clamp(11px, 2.5vw, 16px);
+      }
+
+      .logout-button {
+        padding: 9px;
+        font-size: 11px;
+      }
+
+      .menu-card {
+        min-height: 96px;
+        grid-template-columns: 58px 2px minmax(0, 1fr) 20px;
+        gap: 10px;
+        padding: 13px 11px;
+      }
+
+      .menu-icon svg {
+        width: 34px;
+        height: 34px;
+      }
+
+      .menu-copy strong {
+        font-size: 15px;
+      }
+
+      .menu-copy small {
+        font-size: 11px;
+      }
+
+      .menu-divider {
+        height: 58px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .content {
+        padding: 20px 14px 24px;
+      }
+
+      .topbar {
+        padding: 18px 40px;
+      }
+
+      .brand-title {
+        font-size: 25px;
+      }
+
+      .brand-subtitle {
+        font-size: 9px;
+        letter-spacing: 0.6px;
+      }
+
+      .header-menu {
+        left: 10px;
+      }
+
+      .header-more {
+        right: 10px;
+      }
+
+      .profile-card {
+        gap: 9px;
+        padding: 12px 10px;
+      }
+
+      .profile-avatar {
+        width: 58px;
+        height: 58px;
+        flex-basis: 58px;
+        font-size: 25px;
+      }
+
+      .profile-avatar svg {
+        width: 30px;
+        height: 30px;
+      }
+
+      .employee-name {
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+
+      .employee-id {
+        font-size: 10px;
+      }
+
+      .logout-button {
+        gap: 4px;
+        padding: 7px 6px;
+        font-size: 10px;
+      }
+
+      .logout-button svg {
+        width: 15px;
+        height: 15px;
+      }
+
+      .menu-card {
+        grid-template-columns: 50px 2px minmax(0, 1fr) 17px;
+        gap: 8px;
+        padding: 12px 9px;
+        min-height: 90px;
+      }
+
+      .menu-icon svg {
+        width: 31px;
+        height: 31px;
+      }
+
+      .menu-copy strong {
+        font-size: 13px;
+      }
+
+      .menu-copy small {
+        font-size: 10px;
+      }
+
+      .menu-arrow svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+    
+/* ซ่อนแถบเลื่อนด้านข้าง แต่ยังเลื่อนหน้าเว็บได้ */
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.app::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- ส่วนหัว -->
+    <header class="topbar">
+      <button class="header-menu" id="menuButton" aria-label="เมนู">
+        <i data-lucide="menu"></i>
+      </button>
+
+      <div class="brand">
+        <h1 class="brand-title">CHEMsafety+</h1>
+        <div class="brand-subtitle">SAFETY · COMPLIANCE · CARE</div>
+      </div>
+
+      <button class="header-more" id="moreButton" aria-label="เพิ่มเติม">
+        <i data-lucide="more-vertical"></i>
+      </button>
+    </header>
+
+    <main class="content">
+
+      <!-- หน้าหลัก -->
+      <section id="homePage">
+        <h2 class="page-heading">หน้าหลัก</h2>
+
+        <!-- การ์ดโปรไฟล์ -->
+        <div class="profile-card">
+          <div class="profile-avatar">
+            <i data-lucide="user-round"></i>
+          </div>
+
+          <div class="profile-info">
+            <h3 class="employee-name" id="employeeName">
+              ศิริวรรณ กลสมบูรณ์
+            </h3>
+            <div class="employee-id">
+              รหัสพนักงาน: EMP001
+            </div>
+          </div>
+
+          <button class="logout-button" id="logoutButton">
+            <i data-lucide="log-out"></i>
+            <span>ออกจากระบบ</span>
+          </button>
+        </div>
+
+        <!-- เมนูหลัก -->
+        <div class="menu-grid">
+
+          <!-- รายงานเปิด-ปิดถัง -->
+          <button class="menu-card report" data-page="report">
+            <div class="menu-icon">
+              <i data-lucide="clipboard-pen-line"></i>
+            </div>
+
+            <div class="menu-divider"></div>
+
+            <div class="menu-copy">
+              <strong>รายงานเปิด-ปิดถัง</strong>
+              <small>บันทึกการเปิดและปิดถังสารเคมี</small>
+            </div>
+
+            <div class="menu-arrow">
+              <i data-lucide="chevron-right"></i>
+            </div>
+          </button>
+
+          <!-- ตรวจสอบความปลอดภัย -->
+          <button class="menu-card inspect" data-page="inspect">
+            <div class="menu-icon">
+              <i data-lucide="shield-check"></i>
+            </div>
+
+            <div class="menu-divider"></div>
+
+            <div class="menu-copy">
+              <strong>ตรวจสอบความปลอดภัย</strong>
+              <small>บันทึกผลการตรวจสอบก่อนและหลังทำงาน</small>
+            </div>
+
+            <div class="menu-arrow">
+              <i data-lucide="chevron-right"></i>
+            </div>
+          </button>
+
+          <!-- สถานะถังสารเคมี -->
+          <button class="menu-card tank-status" data-page="handover">
+            <div class="menu-icon">
+              <i data-lucide="database"></i>
+            </div>
+
+            <div class="menu-divider"></div>
+
+            <div class="menu-copy">
+              <strong>สถานะถังสารเคมี</strong>
+              <small>ตรวจสอบสถานะถังสารเคมีปัจจุบัน</small>
+            </div>
+
+            <div class="menu-arrow">
+              <i data-lucide="chevron-right"></i>
+            </div>
+          </button>
+
+          <!-- ประวัติการใช้งาน -->
+          <button class="menu-card history" data-page="history">
+            <div class="menu-icon">
+              <i data-lucide="history"></i>
+            </div>
+
+            <div class="menu-divider"></div>
+
+            <div class="menu-copy">
+              <strong>ประวัติการใช้งาน</strong>
+              <small>ดูรายการบันทึกย้อนหลัง</small>
+            </div>
+
+            <div class="menu-arrow">
+              <i data-lucide="chevron-right"></i>
+            </div>
+          </button>
+
+        </div>
+      </section>
+
+      <!-- หน้ารายละเอียด -->
+      <section class="subpage" id="subPage">
+        <button class="back-button" id="backButton">
+          <i data-lucide="arrow-left"></i>
+          กลับหน้าหลัก
+        </button>
+
+        <h2 id="subPageTitle">หน้ารายละเอียด</h2>
+        <p id="subPageDescription"></p>
+      </section>
+
+    </main>
+
+    <!-- แถบเมนูด้านล่าง -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-page="home">
+        <span class="nav-icon">
+          <i data-lucide="house"></i>
+        </span>
+        <span>หน้าหลัก</span>
+      </button>
+
+      <button class="nav-item" data-page="report">
+        <span class="nav-icon">
+          <i data-lucide="clipboard-list"></i>
+        </span>
+        <span>รายงาน</span>
+      </button>
+
+      <button class="nav-item" data-page="history">
+        <span class="nav-icon">
+          <i data-lucide="history"></i>
+        </span>
+        <span>ประวัติ</span>
+      </button>
+
+      <button class="nav-item" data-page="notifications">
+        <span class="nav-icon">
+          <i data-lucide="bell"></i>
+        </span>
+        <span>แจ้งเตือน</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <script>
+    const pageData = {
+      home: {
+        title: "หน้าหลัก",
+        description: ""
+      },
+
+      report: {
+        title: "รายงานเปิด-ปิดถัง",
+        description: "ใช้สำหรับบันทึกการเปิดและปิดถังสารเคมี"
+      },
+
+      inspect: {
+        title: "ตรวจสอบความปลอดภัย",
+        description: "ใช้สำหรับบันทึกผลการตรวจสอบก่อนและหลังทำงาน"
+      },
+
+      handover: {
+        title: "สถานะถังสารเคมี",
+        description: "ตรวจสอบสถานะถังสารเคมี เช่น เปิดอยู่ ปิดแล้ว หรือยังไม่ทราบสถานะ"
+      },
+
+      history: {
+        title: "ประวัติการใช้งาน",
+        description: "แสดงประวัติการรายงานเปิด-ปิดถังสารเคมีย้อนหลัง"
+      },
+
+      notifications: {
+        title: "การแจ้งเตือน",
+        description: "พื้นที่สำหรับแสดงการแจ้งเตือนเกี่ยวกับสถานะถังสารเคมี"
+      }
+    };
+
+    const homePage = document.getElementById("homePage");
+    const subPage = document.getElementById("subPage");
+    const subPageTitle = document.getElementById("subPageTitle");
+    const subPageDescription =
+      document.getElementById("subPageDescription");
+    
+function showPage(page) {
+  const pages = {
+    home: "home.html",
+    report: "report.html",
+    inspect: "inspect.html",
+    handover: "tank-status.html",
+    history: "history.html"
+  };
+
+  if (pages[page]) {
+    window.location.href = pages[page];
+    return;
+  }
+
+  if (page === "notifications") {
+    alert("หน้าการแจ้งเตือนยังไม่ได้สร้าง");
+  }
+}
+
+    document.querySelectorAll("[data-page]").forEach(button => {
+      button.addEventListener("click", () => {
+        showPage(button.dataset.page);
+      });
+    });
+
+    document.getElementById("backButton").addEventListener("click", () => {
+      showPage("home");
+    });
+
+    document.getElementById("menuButton").addEventListener("click", () => {
+      showPage("home");
+    });
+
+    document.getElementById("moreButton").addEventListener("click", () => {
+      showPage("notifications");
+    });
+
+    document.getElementById("logoutButton").addEventListener("click", () => {
+      const confirmLogout = confirm("ต้องการออกจากระบบหรือไม่?");
+
+      if (confirmLogout) {
+        alert("ตัวอย่างหน้าจอ: ยังไม่ได้เชื่อมต่อระบบออกจากระบบจริง");
+      }
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>

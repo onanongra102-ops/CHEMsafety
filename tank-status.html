@@ -1,0 +1,547 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สถานะถังสารเคมี | CHEMsafety+</title>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Tahoma, "Noto Sans Thai", Arial, sans-serif;
+      background: #E9F4F0;
+      color: #17483B;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    .topbar {
+      background: linear-gradient(135deg, #00644B, #004B3B);
+      padding: 25px 20px;
+      text-align: center;
+      color: white;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .topbar p {
+      margin: 8px 0 0;
+      font-size: 13px;
+    }
+
+    .content {
+      max-width: 700px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 22px 18px;
+      background: white;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .back-button {
+      border: none;
+      background: #E2F7EE;
+      color: #00513E;
+      border-radius: 9px;
+      padding: 10px 15px;
+      font-size: 14px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    h2 {
+      margin: 24px 0 8px;
+      color: #103E35;
+      font-size: 23px;
+    }
+
+    .description {
+      color: #456B5F;
+      font-size: 14px;
+      line-height: 1.7;
+      margin: 0 0 20px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .summary-card {
+      padding: 15px 10px;
+      border: 1px solid #D8E9E2;
+      border-radius: 13px;
+      background: #F5FAF7;
+      text-align: center;
+    }
+
+    .summary-card .number {
+      font-size: 27px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .summary-card .caption {
+      font-size: 12px;
+      line-height: 1.5;
+      color: #456B5F;
+    }
+
+    .total-number {
+      color: #17483B;
+    }
+
+    .open-number {
+      color: #B42318;
+    }
+
+    .closed-number {
+      color: #00804F;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .filters input,
+    .filters select {
+      width: 100%;
+      min-width: 0;
+      padding: 11px;
+      border: 1px solid #C9DED5;
+      border-radius: 9px;
+      background: white;
+      color: #17483B;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .tank-list {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .tank-card {
+      border: 1px solid #D8E9E2;
+      border-radius: 14px;
+      padding: 16px;
+      background: #FFFFFF;
+    }
+
+    .tank-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .tank-name {
+      font-size: 17px;
+      font-weight: bold;
+      color: #103E35;
+    }
+
+    .tank-chemical {
+      font-size: 13px;
+      color: #628075;
+      margin-top: 5px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .status-open {
+      color: #B42318;
+      background: #FCE8E6;
+    }
+
+    .status-closed {
+      color: #00644B;
+      background: #DDF5E8;
+    }
+
+    .status-unknown {
+      color: #805B00;
+      background: #FFF3CD;
+    }
+
+    .tank-details {
+      border-top: 1px solid #E7F0EB;
+      padding-top: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .detail-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #456B5F;
+    }
+
+    .detail-row i {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .empty-state {
+      padding: 28px 15px;
+      text-align: center;
+      color: #628075;
+      background: #F5FAF7;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+
+    .refresh-note {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #628075;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 480px) {
+      .topbar {
+        padding: 22px 16px;
+      }
+
+      .topbar h1 {
+        font-size: 22px;
+      }
+
+      .content {
+        padding: 20px 14px;
+      }
+
+      .summary-grid {
+        gap: 7px;
+      }
+
+      .summary-card {
+        padding: 13px 5px;
+      }
+
+      .summary-card .number {
+        font-size: 24px;
+      }
+
+      .summary-card .caption {
+        font-size: 11px;
+      }
+
+      .filters {
+        flex-direction: column;
+      }
+
+      .tank-header {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <h1>CHEMsafety+</h1>
+    <p>ระบบติดตามสถานะถังสารเคมี</p>
+  </header>
+
+  <main class="content">
+
+    <button
+      type="button"
+      class="back-button"
+      onclick="window.location.href='home.html'">
+      <i data-lucide="arrow-left"
+         width="16" height="16"
+         style="vertical-align: middle;"></i>
+      กลับหน้าหลัก
+    </button>
+
+    <h2>สถานะถังสารเคมี</h2>
+
+    <p class="description">
+      ตรวจสอบสถานะการเปิด–ปิดถังสารเคมีและเวลาที่มีการรายงานล่าสุด
+    </p>
+
+    <!-- สรุปจำนวนถัง -->
+    <div class="summary-grid">
+
+      <div class="summary-card">
+        <div class="number total-number" id="totalCount">0</div>
+        <div class="caption">ถังทั้งหมด</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="number open-number" id="openCount">0</div>
+        <div class="caption">เปิดถังอยู่</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="number closed-number" id="closedCount">0</div>
+        <div class="caption">ปิดถังแล้ว</div>
+      </div>
+
+    </div>
+
+    <div class="section-title">รายการถังสารเคมี</div>
+
+    <!-- ช่องค้นหาและกรองสถานะ -->
+    <div class="filters">
+
+      <div class="search-box">
+        <input
+          type="search"
+          id="searchInput"
+          placeholder="ค้นหารหัสถังหรือชื่อสารเคมี..."
+          aria-label="ค้นหาถังสารเคมี">
+      </div>
+
+      <select id="statusFilter" aria-label="กรองสถานะถัง">
+        <option value="all">ทุกสถานะ</option>
+        <option value="open">เปิดถังอยู่</option>
+        <option value="closed">ปิดถังแล้ว</option>
+        <option value="unknown">ไม่ทราบสถานะ</option>
+      </select>
+
+    </div>
+
+    <div class="tank-list" id="tankList"></div>
+
+    <p class="refresh-note">
+      หมายเหตุ: ข้อมูลที่แสดงในหน้านี้เป็นข้อมูลตัวอย่างสำหรับทดสอบ
+      ยังไม่ได้เชื่อมต่อกับระบบรายงานเปิด–ปิดถังจริง
+    </p>
+
+  </main>
+
+  <script>
+    // ข้อมูลตัวอย่างสำหรับทดสอบหน้าเว็บ
+    // เปลี่ยนรหัสถังและชื่อสารเคมีให้ตรงกับสถานที่ทำงานได้
+    const tanks = [
+      {
+        id: "TANK-01",
+        chemical: "สารเคมีตัวอย่าง A",
+        area: "พื้นที่สารเคมี",
+        status: "closed",
+        lastAction: "ปิดถังแล้ว",
+        lastTime: "ยังไม่มีข้อมูลจริง"
+      },
+      {
+        id: "TANK-02",
+        chemical: "สารเคมีตัวอย่าง B",
+        area: "พื้นที่การผลิต",
+        status: "open",
+        lastAction: "เปิดถังแล้ว",
+        lastTime: "ยังไม่มีข้อมูลจริง"
+      },
+      {
+        id: "TANK-03",
+        chemical: "สารเคมีตัวอย่าง C",
+        area: "พื้นที่สารเคมี",
+        status: "unknown",
+        lastAction: "ยังไม่มีรายงาน",
+        lastTime: "ยังไม่มีข้อมูลจริง"
+      },
+      {
+        id: "TANK-04",
+        chemical: "สารเคมีตัวอย่าง D",
+        area: "พื้นที่การผลิต",
+        status: "closed",
+        lastAction: "ปิดถังแล้ว",
+        lastTime: "ยังไม่มีข้อมูลจริง"
+      },
+      {
+        id: "TANK-05",
+        chemical: "สารเคมีตัวอย่าง E",
+        area: "พื้นที่สารเคมี",
+        status: "closed",
+        lastAction: "ปิดถังแล้ว",
+        lastTime: "ยังไม่มีข้อมูลจริง"
+      },
+      {
+        id: "TANK-06",
+        chemical: "สารเคมีตัวอย่าง F",
+        area: "พื้นที่การผลิต",
+        status: "unknown",
+        lastAction: "ยังไม่มีรายงาน",
+        lastTime: "ยังไม่มีข้อมูลจริง"
+      }
+    ];
+
+    const tankList = document.getElementById("tankList");
+    const searchInput = document.getElementById("searchInput");
+    const statusFilter = document.getElementById("statusFilter");
+
+    function renderTanks() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      const selectedStatus = statusFilter.value;
+
+      const filteredTanks = tanks.filter(tank => {
+        const matchesKeyword =
+          tank.id.toLowerCase().includes(keyword) ||
+          tank.chemical.toLowerCase().includes(keyword) ||
+          tank.area.toLowerCase().includes(keyword);
+
+        const matchesStatus =
+          selectedStatus === "all" ||
+          tank.status === selectedStatus;
+
+        return matchesKeyword && matchesStatus;
+      });
+
+      const openCount = tanks.filter(
+        tank => tank.status === "open"
+      ).length;
+
+      const closedCount = tanks.filter(
+        tank => tank.status === "closed"
+      ).length;
+
+      document.getElementById("totalCount").textContent =
+        tanks.length;
+
+      document.getElementById("openCount").textContent =
+        openCount;
+
+      document.getElementById("closedCount").textContent =
+        closedCount;
+
+      if (filteredTanks.length === 0) {
+        tankList.innerHTML = `
+          <div class="empty-state">
+            ไม่พบถังสารเคมีที่ตรงกับการค้นหา
+          </div>
+        `;
+        return;
+      }
+
+      tankList.innerHTML = filteredTanks.map(tank => {
+        let statusText = "";
+        let statusClass = "";
+        let statusIcon = "";
+
+        if (tank.status === "open") {
+          statusText = "เปิดถังอยู่";
+          statusClass = "status-open";
+          statusIcon = "alert-circle";
+        } else if (tank.status === "closed") {
+          statusText = "ปิดถังแล้ว";
+          statusClass = "status-closed";
+          statusIcon = "check-circle";
+        } else {
+          statusText = "ไม่ทราบสถานะ";
+          statusClass = "status-unknown";
+          statusIcon = "help-circle";
+        }
+
+        return `
+          <article class="tank-card">
+
+            <div class="tank-header">
+              <div>
+                <div class="tank-name">
+                  ${escapeHTML(tank.id)}
+                </div>
+                <div class="tank-chemical">
+                  ${escapeHTML(tank.chemical)}
+                </div>
+              </div>
+
+              <span class="status ${statusClass}">
+                <i data-lucide="${statusIcon}"
+                   width="15" height="15"></i>
+                ${statusText}
+              </span>
+            </div>
+
+            <div class="tank-details">
+
+              <div class="detail-row">
+                <i data-lucide="map-pin" width="16" height="16"></i>
+                <span>พื้นที่: ${escapeHTML(tank.area)}</span>
+              </div>
+
+              <div class="detail-row">
+                <i data-lucide="clipboard-list"
+                   width="16" height="16"></i>
+                <span>รายการล่าสุด: ${escapeHTML(tank.lastAction)}</span>
+              </div>
+
+              <div class="detail-row">
+                <i data-lucide="clock" width="16" height="16"></i>
+                <span>เวลารายงาน: ${escapeHTML(tank.lastTime)}</span>
+              </div>
+
+            </div>
+
+          </article>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    // ป้องกันข้อความที่กรอกเข้ามาถูกตีความเป็น HTML
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    searchInput.addEventListener("input", renderTanks);
+    statusFilter.addEventListener("change", renderTanks);
+
+    renderTanks();
+  </script>
+
+</body>
+</html>

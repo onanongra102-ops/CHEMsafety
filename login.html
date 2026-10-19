@@ -1,0 +1,917 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHEMsafety+ | Login</title>
+
+  <style>
+    :root {
+      /* สีหลัก CHEMsafety+ */
+      --green-dark: #005B45;
+      --green: #00644B;
+      --green-black: #103E35;
+      --background: #E9F4F0;
+      --white: #FFFFFF;
+      --border: #D8E9E4;
+
+      --text: #103E35;
+      --muted: #718D85;
+      --shadow: 0 22px 60px rgba(16, 62, 53, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      color: var(--text);
+      background: var(--background);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* พื้นหลังใหม่ ไม่มีภาพโรงงาน */
+    .page {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 22px;
+      overflow: hidden;
+      background:
+        radial-gradient(
+          circle at 10% 15%,
+          rgba(0, 100, 75, 0.10),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 90% 85%,
+          rgba(0, 91, 69, 0.10),
+          transparent 30%
+        ),
+        linear-gradient(135deg, #E9F4F0 0%, #FFFFFF 52%, #E9F4F0 100%);
+    }
+
+    /* วงกลมตกแต่ง */
+    .decor {
+      position: absolute;
+      border: 1px solid rgba(0, 100, 75, 0.10);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .decor-one {
+      width: 480px;
+      height: 480px;
+      top: -250px;
+      left: -170px;
+    }
+
+    .decor-two {
+      width: 360px;
+      height: 360px;
+      right: -170px;
+      bottom: -130px;
+    }
+
+    .decor-three {
+      width: 180px;
+      height: 180px;
+      right: 7%;
+      top: 8%;
+      background: rgba(255, 255, 255, 0.20);
+      border-color: rgba(0, 100, 75, 0.06);
+    }
+
+    .login-wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1040px;
+      display: grid;
+      grid-template-columns: 1fr 0.9fr;
+      align-items: center;
+      gap: 58px;
+    }
+
+    /* ฝั่งโลโก้และข้อความ */
+    .brand-panel {
+      padding: 20px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      width: 104px;
+      height: 115spx;
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      margin: 0;
+      color: var(--green-dark);
+      font-size: clamp(30px, 4vw, 55px);
+      font-weight: 850;
+      letter-spacing: -1.5px;
+      line-height: 1.15;
+    }
+
+    .brand-tagline {
+      margin-top: 10px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+      line-height: 1.7;
+    }
+
+    .brand-description {
+      max-width: 470px;
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.9;
+    }
+
+    .brand-subdescription {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    /* จุดเด่นด้านล่าง */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 42px;
+    }
+
+    .feature {
+      padding: 16px 10px;
+      border: 1px solid rgba(216, 233, 228, 0.95);
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.62);
+      text-align: center;
+    }
+
+    .feature-icon {
+      display: block;
+      margin-bottom: 15px;
+      color: var(--green);
+    }
+
+    .feature-icon svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .feature-title {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    /* กล่อง Login */
+    .login-card {
+      width: 100%;
+      padding: 42px 38px;
+      border: 1px solid rgba(216, 233, 228, 0.9);
+      border-radius: 15px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .mobile-brand {
+      display: none;
+    }
+
+    .login-heading {
+      margin: 0;
+      color: var(--green-dark);
+      font-size: 30px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .login-subheading {
+      margin: 12px 0 30px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 58px;
+      padding: 0 16px;
+      border: 2px solid var(--border);
+      border-radius: 13px;
+      background: #FCFEFD;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-wrap:focus-within {
+      border-color: var(--green);
+      box-shadow: 0 0 0 4px rgba(0, 100, 75, 0.08);
+    }
+
+    .input-icon {
+      display: flex;
+      align-items: center;
+      color: var(--green);
+    }
+
+    .input-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      min-width: 0;
+      height: 54px;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .input-wrap input::placeholder {
+      color: #91A7A0;
+    }
+
+    .toggle-password {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      border: 0;
+      color: var(--green);
+      background: transparent;
+    }
+
+    .toggle-password svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* จำการเข้าสู่ระบบและลืมรหัสผ่าน */
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 5px 0 24px;
+      font-size: 13px;
+    }
+
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .remember input {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--green);
+      cursor: pointer;
+    }
+
+    .text-link {
+      padding: 0;
+      border: 0;
+      color: var(--green);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* ปุ่มเข้าสู่ระบบ */
+    .login-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      min-height: 58px;
+      border: 0;
+      border-radius: 13px;
+      background: linear-gradient(
+        110deg,
+        var(--green),
+        var(--green-dark)
+      );
+      color: var(--white);
+      font-size: 18px;
+      font-weight: 800;
+      box-shadow: 0 8px 18px rgba(0, 91, 69, 0.18);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0, 91, 69, 0.23);
+    }
+
+    .login-button svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .form-message {
+      min-height: 18px;
+      margin: 12px 0 0;
+      font-size: 12px;
+      line-height: 1.7;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .form-message.error {
+      color: #B42318;
+    }
+
+    .form-message.info {
+      color: var(--green);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 28px 0 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: var(--border);
+    }
+
+    .register-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      min-height: 56px;
+      border: 1.5px solid var(--green);
+      border-radius: 13px;
+      background: #FFFFFF;
+      color: var(--green-dark);
+      font-size: 16px;
+      font-weight: 800;
+      transition: background 0.2s;
+    }
+
+    .register-button:hover {
+      background: var(--background);
+    }
+
+    .register-button svg {
+      width: 23px;
+      height: 23px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .footer {
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+      text-align: center;
+      letter-spacing: 0.7px;
+    }
+
+    /* Tablet */
+    @media (max-width: 850px) {
+      .login-wrapper {
+        max-width: 500px;
+        grid-template-columns: 1fr;
+        gap: 26px;
+      }
+
+      .brand-panel {
+        padding: 0;
+        text-align: center;
+      }
+
+      .brand {
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .logo {
+        width: 76px;
+        height: 88px;
+      }
+
+      .brand-name {
+        font-size: 33px;
+      }
+
+      .brand-description {
+        max-width: none;
+        font-size: 16px;
+      }
+
+      .brand-subdescription {
+        margin-top: 5px;
+      }
+
+      .features {
+        display: none;
+      }
+
+      .login-card {
+        padding: 34px 28px;
+      }
+    }
+
+    /* Điện thoại */
+    @media (max-width: 480px) {
+      .page {
+        padding: 28px 16px;
+      }
+
+      .login-wrapper {
+        gap: 22px;
+      }
+
+      .brand {
+        gap: 12px;
+      }
+
+      .logo {
+        width: 63px;
+        height: 75px;
+      }
+
+      .brand-name {
+        font-size: 27px;
+        letter-spacing: -0.8px;
+      }
+
+      .brand-tagline {
+        font-size: 9px;
+        letter-spacing: 0.8px;
+      }
+
+      .brand-description {
+        font-size: 14px;
+      }
+
+      .brand-subdescription {
+        font-size: 12px;
+      }
+
+      .login-card {
+        padding: 28px 20px;
+        border-radius: 23px;
+      }
+
+      .login-heading {
+        font-size: 25px;
+      }
+
+      .login-subheading {
+        margin-bottom: 24px;
+      }
+
+      .input-wrap {
+        min-height: 54px;
+        padding: 0 12px;
+      }
+
+      .input-wrap input {
+        height: 50px;
+        font-size: 13px;
+      }
+
+      .form-options {
+        font-size: 11px;
+      }
+
+      .text-link {
+        font-size: 11px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <div class="decor decor-one"></div>
+    <div class="decor decor-two"></div>
+    <div class="decor decor-three"></div>
+
+    <div class="login-wrapper">
+
+      <!-- ด้านซ้าย: โลโก้และจุดเด่น -->
+      <section class="brand-panel">
+
+        <div class="brand">
+          <!-- โลโก้ Safety วาดด้วย SVG -->
+          <svg
+            class="logo"
+            viewBox="0 0 110 125"
+            xmlns="http://www.w3.org/2000/svg"
+            role="img"
+            aria-label="CHEMsafety+ Safety Logo"
+          >
+            <defs>
+              <linearGradient id="shieldGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#00644B"/>
+                <stop offset="100%" stop-color="#103E35"/>
+              </linearGradient>
+            </defs>
+
+            <path
+              d="M55 4 C39 16 22 20 8 22 L8 58
+                 C8 84 27 105 55 120
+                 C83 105 102 84 102 58 L102 22
+                 C88 20 71 16 55 4Z"
+              fill="url(#shieldGradient)"
+              stroke="#005B45"
+              stroke-width="3"
+            />
+
+            <path
+              d="M55 13 C42 22 29 25 16 27 L16 58
+                 C16 79 32 97 55 111
+                 C78 97 94 79 94 58 L94 27
+                 C81 25 68 22 55 13Z"
+              fill="none"
+              stroke="#FFFFFF"
+              stroke-opacity=".23"
+              stroke-width="1.5"
+            />
+
+            <!-- หมวกนิรภัย -->
+            <path
+              d="M34 48 Q34 29 55 29 Q76 29 76 48 L76 52 L34 52Z"
+              fill="#FFFFFF"
+            />
+
+            <path
+              d="M28 53 H82 M45 34 V49 M55 30 V49 M65 34 V49"
+              fill="none"
+              stroke="#005B45"
+              stroke-width="3"
+              stroke-linecap="round"
+            />
+
+            <!-- ใบหน้า -->
+            <path
+              d="M39 54 H71 V62 Q71 75 55 80 Q39 75 39 62Z"
+              fill="#FFFFFF"
+            />
+
+            <!-- เสื้อเจ้าหน้าที่ -->
+            <path
+              d="M31 98 V88 Q31 79 43 76 L55 84
+                 L67 76 Q79 79 79 88 V99Z"
+              fill="#FFFFFF"
+            />
+
+            <path
+              d="M48 80 L55 89 L62 80 M55 89 V99"
+              fill="none"
+              stroke="#00644B"
+              stroke-width="3"
+              stroke-linejoin="round"
+            />
+
+            <rect x="64" y="87" width="10" height="10" rx="1.5" fill="#00644B"/>
+            <path
+              d="M69 89 V95 M66 92 H72"
+              stroke="#FFFFFF"
+              stroke-width="1.6"
+            />
+          </svg>
+
+          <div>
+            <h1 class="brand-name">CHEMsafety+</h1>
+            <div class="brand-tagline">
+              SAFETY · COMPLIANCE · CARE
+            </div>
+          </div>
+        </div>
+
+        <h2 class="brand-description">
+          ระบบรายงานการเปิด-ปิดถังสารเคมีออนไลน์
+        </h2>
+
+        <p class="brand-subdescription">
+          เพื่อความปลอดภัยในการทำงานของทุกคน
+        </p>
+
+        <div class="features">
+          <div class="feature">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>
+                <path d="m9 12 2 2 4-4"/>
+              </svg>
+            </span>
+            <div class="feature-title">ปลอดภัย<br>ในการทำงาน</div>
+          </div>
+
+          <div class="feature">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 20A7 7 0 0 1 4 13C4 6 12 3 21 3c0 9-3 17-10 17Z"/>
+                <path d="M8 16 17 7"/>
+              </svg>
+            </span>
+            <div class="feature-title">ใส่ใจสิ่งแวดล้อม</div>
+          </div>
+
+          <div class="feature">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </span>
+            <div class="feature-title">ร่วมมือ<br>เพื่ออนาคตที่ยั่งยืน</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ด้านขวา: แบบฟอร์ม Login -->
+      <section class="login-card">
+
+        <h2 class="login-heading">ยินดีต้อนรับสู่</h2>
+        <p class="login-subheading">
+          เข้าสู่ระบบ CHEMsafety+ เพื่อเริ่มใช้งาน
+        </p>
+
+        <form id="loginForm">
+
+          <div class="form-group">
+            <label class="form-label" for="username">
+              ชื่อผู้ใช้ / อีเมล
+            </label>
+
+            <div class="input-wrap">
+              <span class="input-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M4 21v-2a8 8 0 0 1 16 0v2Z"/>
+                </svg>
+              </span>
+
+              <input
+                id="username"
+                name="username"
+                type="text"
+                placeholder="กรอกชื่อผู้ใช้หรืออีเมล"
+                autocomplete="username"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">
+              รหัสผ่าน
+            </label>
+
+            <div class="input-wrap">
+              <span class="input-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="4" y="10" width="16" height="11" rx="2"/>
+                  <path d="M8 10V7a4 4 0 1 1 8 0v3"/>
+                  <circle cx="12" cy="15" r="1"/>
+                  <path d="M12 16v2"/>
+                </svg>
+              </span>
+
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="กรอกรหัสผ่าน"
+                autocomplete="current-password"
+                required
+              >
+
+              <button
+                class="toggle-password"
+                id="togglePassword"
+                type="button"
+                aria-label="แสดงรหัสผ่าน"
+                title="แสดงหรือซ่อนรหัสผ่าน"
+              >
+                <svg id="eyeIcon" viewBox="0 0 24 24">
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="remember">
+              <input type="checkbox" id="rememberMe" name="rememberMe">
+              <span>จดจำการเข้าสู่ระบบ</span>
+            </label>
+
+            <button
+              class="text-link"
+              id="forgotPassword"
+              type="button"
+            >
+              ลืมรหัสผ่าน?
+            </button>
+          </div>
+
+          <button class="login-button" type="submit">
+            <svg viewBox="0 0 24 24">
+              <path d="M10 17l5-5-5-5"/>
+              <path d="M15 12H3"/>
+              <path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/>
+            </svg>
+            <span>เข้าสู่ระบบ</span>
+          </button>
+
+          <p id="formMessage" class="form-message" role="status"></p>
+
+          <div class="divider">หรือ</div>
+
+          <button
+            class="register-button"
+            id="registerButton"
+            type="button"
+          >
+            <svg viewBox="0 0 24 24">
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M2 21v-2a7 7 0 0 1 14 0v2"/>
+              <path d="M19 8v6 M16 11h6"/>
+            </svg>
+            <span>สมัครสมาชิก</span>
+          </button>
+
+        </form>
+
+        <footer class="footer">
+          CHEMsafety+ · SAFETY · COMPLIANCE · CARE
+        </footer>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    const loginForm = document.getElementById("loginForm");
+    const username = document.getElementById("username");
+    const password = document.getElementById("password");
+    const formMessage = document.getElementById("formMessage");
+    const togglePassword = document.getElementById("togglePassword");
+
+    function showMessage(message, type = "info") {
+      formMessage.textContent = message;
+      formMessage.className = "form-message " + type;
+    }
+
+    // แสดงหรือซ่อนรหัสผ่าน
+    togglePassword.addEventListener("click", () => {
+      const isPassword = password.type === "password";
+
+      password.type = isPassword ? "text" : "password";
+      togglePassword.setAttribute(
+        "aria-label",
+        isPassword ? "ซ่อนรหัสผ่าน" : "แสดงรหัสผ่าน"
+      );
+
+      togglePassword.innerHTML = isPassword
+        ? `<svg viewBox="0 0 24 24">
+             <path d="M3 3l18 18"/>
+             <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+             <path d="M9.9 5.2A10.8 10.8 0 0 1 12 5
+               c6.5 0 10 7 10 7a15 15 0 0 1-4 4.8"/>
+             <path d="M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7
+               c1.1 0 2.1-.2 3-.5"/>
+           </svg>`
+        : `<svg viewBox="0 0 24 24">
+             <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
+             <circle cx="12" cy="12" r="3"/>
+           </svg>`;
+    });
+    
+ // เข้าสู่ระบบตัวอย่าง แล้วไปหน้า Home
+loginForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const user = username.value.trim();
+  const pass = password.value;
+
+  if (user === "EMP001" && pass === "1234") {
+    window.location.href = "home.html";
+  } else {
+    showMessage(
+      "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
+      "error"
+    );
+  }
+});
+
+    document.getElementById("forgotPassword")
+      .addEventListener("click", () => {
+        showMessage(
+          "ระบบลืมรหัสผ่านจะใช้งานได้เมื่อเชื่อมต่อระบบบัญชี",
+          "info"
+        );
+      });
+
+    document.getElementById("registerButton")
+      .addEventListener("click", () => {
+        showMessage(
+          "หน้าสมัครสมาชิกจะต้องสร้างและเชื่อมต่อเพิ่มเติม",
+          "info"
+        );
+      });
+  </script>
+</body>
+</html>
